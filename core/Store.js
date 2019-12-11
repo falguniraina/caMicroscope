@@ -83,10 +83,10 @@ class Store {
     var query = {}
     var bySlideId
     if (slide) {
-      query.slide = slide
+      query['provenance.image.slide'] = slide
     }
     if (name) {
-      query.name = name
+      query['provenance.analysis.execution_id'] = name
     }
     if (footprint) {
       query.footprint = footprint
@@ -113,41 +113,6 @@ class Store {
 
   }
 
-  /**
-   * find marks which contain a given point
-   * NOTE: this works only by exact match
-   * @param {number} x0 - x min position of rect to search
-   * @param {number} y0 - y min position of rect to search
-   * @param {number} x1 - x max position of rect to search
-   * @param {number} y1 - y max position of rect to search
-   * @param {string} [name] - the associated slide name
-   * @param {string} [slide] - the associated marktype name, supporting regex match
-   * @returns {promise} - promise which resolves with data
-   **/
-  findMarkSpatial(x0, y0, x1, y1, name, slide, key) {
-    var suffix = "Mark/findBound"
-    var url = this.base + suffix;
-    var query = {}
-    query.x0 = x0
-    query.y0 = y0
-    query.x1 = x1
-    query.y1 = y1
-    if (name) {
-      query.name = name
-    }
-    if (slide) {
-      query.slide = slide
-    }
-    if (key) {
-      query.key = key
-    }
-
-    return fetch(url + "?" + objToParamStr(query), {
-      credentials: "include",
-      mode: "cors"
-    }).then(this.errorHandler).then(x => this.filterBroken(x, "mark"))
-  }
-
   getMarkByIds(ids, slide, source, footprint, x0, x1, y0, y1) {
     if (!Array.isArray(ids) || !slide) {
       return {
@@ -160,8 +125,8 @@ class Store {
     var url = this.base + suffix;
     var query = {}
     var stringifiedIds = ids.map(id => `"${id}"`).join(',');
-    query.name = `[${stringifiedIds}]`;
-    query.slide = slide;
+    query.nameList = `[${stringifiedIds}]`;
+    query["provenance.image.slide"] = slide;
     if (source) {
       query.source = source;
     }
@@ -261,10 +226,9 @@ class Store {
       console.error('Store.findMarkTypes needs slide ... ');
       return null;
     }
-    query.slide = slide
+    query["provenance.image.slide"] = slide
     if (name) {
-      query.name = name
-      suffix = "Mark/typesExec"
+      query["provenance.analysis.execution_id"] = name
     }
     var url = this.base + suffix;
     return fetch(url + "?" + objToParamStr(query), {
@@ -279,10 +243,10 @@ class Store {
     var query = {}
     var bySlideId
     if (name) {
-      query.name = name
+      query["provenance.analysis.execution_id"] = name
     }
     if (slide) {
-      query.slide = slide
+      query["provenance.image.slide"] = slide
     }
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
@@ -294,10 +258,10 @@ class Store {
     var url = this.base + suffix;
     var query = {}
     if (name) {
-      query.name = name
+      query["provenance.analysis.execution_id"] = name
     }
     if (slide) {
-      query.slide = slide
+      query["provenance.image.slide"] = slide
     }
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
@@ -313,8 +277,8 @@ class Store {
     var suffix = "Heatmap/find"
     var url = this.base + suffix;
     var query = {};
-    query.slide = slide;
-    query.name = name;
+    query["provenance.image.slide"] = slide;
+    query["provenance.analysis.execution_id"] = name;
 
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
@@ -356,7 +320,7 @@ class Store {
     var url = this.base + suffix;
     var query = {
       _id: id,
-      slide: slide
+      "provenance.image.slide": slide
     }
     return fetch(url + "?" + objToParamStr(query), {
       method: "DELETE",
@@ -371,20 +335,12 @@ class Store {
     var url = this.base + suffix;
     var query = {}
 
-
     if (slide) {
-      query.slide = slide
+      query["provenance.image.slide"] = slide
     }
 
     if (name) {
-      query.name = name
-    }
-
-    if (fields) {
-      query.fields = fields
-    }
-    if (setting) {
-      query.setting = setting
+      query["provenance.analysis.execution_id"] = name
     }
     var data = {
       'provenance.analysis.fields': fields,
@@ -429,15 +385,15 @@ class Store {
     var query = {}
 
     if (user) {
-      query.user = user
+      query["user_id"] = user
     }
 
     if (slide) {
-      query.slide = slide
+      query["provenance.image.slide"] = slide
     }
 
     if (name) {
-      query.name = name
+      query["provenance.analysis.execution_id"] = name
     }
 
     return fetch(url + "?" + objToParamStr(query), {
@@ -455,13 +411,13 @@ class Store {
     var url = this.base + suffix;
     var query = {}
     if (user) {
-      query.user = user
+      query["user_id"] = user
     }
     if (slide) {
-      query.slide = slide
+      query["provenance.image.slide"] = slide
     }
     if (name) {
-      query.name = name
+      query["provenance.analysis.execution_id"] = name
     }
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
@@ -479,14 +435,14 @@ class Store {
     var url = this.base + suffix;
     var query = {};
     if (user) {
-      query.user = user
+      query["user_id"] = user
     }
     if (slide) {
-      query.slide = slide
+      query["provenance.image.slide"] = slide
     }
 
     if (name) {
-      query.name = name
+      query["provenance.analysis.execution_id"] = name
     }
     return fetch(url + "?" + objToParamStr(query), {
       method: "DELETE",
