@@ -367,7 +367,7 @@ class Store {
 
 
   updateHeatmapFields(slide, name, fields, setting) {
-    var suffix = "Heatmap/threshold"
+    var suffix = "Heatmap/update"
     var url = this.base + suffix;
     var query = {}
 
