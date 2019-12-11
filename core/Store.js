@@ -386,7 +386,7 @@ class Store {
     if (setting) {
       query.setting = setting
     }
-    data = {
+    var data = {
       'provenance.analysis.fields': fields,
       'provenance.analysis.setting': setting
     }
