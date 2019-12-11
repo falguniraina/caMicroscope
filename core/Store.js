@@ -1,6 +1,6 @@
 // requires: Api_Utils
 // METHODS HERE RETURN PROMISES
-// for test server
+// deps for test server
 try {
   var fetch = require('node-fetch');
 } catch (e) {
@@ -52,18 +52,18 @@ class Store {
     };
     return response.json();
   }
-  filterBroken(data, type){
-    if (Array.isArray(data)){
-      if (this.validation[type.toLowerCase()]){
+  filterBroken(data, type) {
+    if (Array.isArray(data)) {
+      if (this.validation[type.toLowerCase()]) {
         return data.filter(this.validation[type])
       } else {
         return data
       }
     } else { // unlikely case?
-      if (this.validation[type.toLowerCase()]){
-        if (this.validation[type](data)){
+      if (this.validation[type.toLowerCase()]) {
+        if (this.validation[type](data)) {
           return data
-        }else{
+        } else {
           return undefined
         }
       }
@@ -94,22 +94,22 @@ class Store {
     if (source) {
       query.source = source
     }
-    if (x0){
+    if (x0) {
       query.x0 = x0;
     }
-    if (x1){
+    if (x1) {
       query.x1 = x1;
     }
-    if (y0){
+    if (y0) {
       query.y0 = y0;
     }
-    if (y1){
+    if (y1) {
       query.y1 = y1;
     }
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
       mode: "cors"
-    }).then(this.errorHandler).then(x=>this.filterBroken(x, "mark"))
+    }).then(this.errorHandler).then(x => this.filterBroken(x, "mark"))
 
   }
 
@@ -145,7 +145,7 @@ class Store {
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
       mode: "cors"
-    }).then(this.errorHandler).then(x=>this.filterBroken(x, "mark"))
+    }).then(this.errorHandler).then(x => this.filterBroken(x, "mark"))
   }
 
   getMarkByIds(ids, slide, source, footprint, x0, x1, y0, y1) {
@@ -162,29 +162,29 @@ class Store {
     var stringifiedIds = ids.map(id => `"${id}"`).join(',');
     query.name = `[${stringifiedIds}]`;
     query.slide = slide;
-    if (source){
+    if (source) {
       query.source = source;
     }
-    if (footprint){
+    if (footprint) {
       query.footprint = footprint;
     }
-    if (x0){
+    if (x0) {
       query.x0 = x0;
     }
-    if (x1){
+    if (x1) {
       query.x1 = x1;
     }
-    if (y0){
+    if (y0) {
       query.y0 = y0;
     }
-    if (y1){
+    if (y1) {
       query.y1 = y1;
     }
 
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
       mode: "cors"
-    }).then(this.errorHandler).then(x=>this.filterBroken(x, "mark"))
+    }).then(this.errorHandler).then(x => this.filterBroken(x, "mark"))
   }
 
 
@@ -194,16 +194,16 @@ class Store {
    * @returns {promise} - promise which resolves with data
    **/
   getMark(id) {
-    var suffix = "Mark/get"
+    var suffix = "Mark/find"
     var url = this.base + suffix;
     var query = {
-      'id': id
+      '_id': id
     }
 
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
       mode: "cors"
-    }).then(this.errorHandler).then(x=>this.filterBroken(x, "mark"))
+    }).then(this.errorHandler).then(x => this.filterBroken(x, "mark"))
   }
   /**
    * post mark
@@ -213,7 +213,7 @@ class Store {
   addMark(json) {
     var suffix = "Mark/post"
     var url = this.base + suffix;
-    if (this.validation.mark && !this.validation.mark(json)){
+    if (this.validation.mark && !this.validation.mark(json)) {
       console.warn(this.validation.mark.errors)
     }
     return fetch(url, {
@@ -237,7 +237,7 @@ class Store {
     var suffix = "Mark/delete"
     var url = this.base + suffix;
     var query = {
-      id: id,
+      _id: id,
       slide: slide
     }
     return fetch(url + "?" + objToParamStr(query), {
@@ -257,7 +257,7 @@ class Store {
 
     var query = {}
     //
-    if(!slide) {
+    if (!slide) {
       console.error('Store.findMarkTypes needs slide ... ');
       return null;
     }
@@ -287,7 +287,7 @@ class Store {
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
       mode: "cors"
-    }).then(this.errorHandler).then(x=>this.filterBroken(x, "heatmap"))
+    }).then(this.errorHandler).then(x => this.filterBroken(x, "heatmap"))
   }
   findHeatmapType(slide, name) {
     var suffix = "Heatmap/types"
@@ -302,7 +302,7 @@ class Store {
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
       mode: "cors"
-    }).then(this.errorHandler).then(x=>this.filterBroken(x, "heatmap"))
+    }).then(this.errorHandler).then(x => this.filterBroken(x, "heatmap"))
   }
   /**
    * get heatmap by id
@@ -310,7 +310,7 @@ class Store {
    * @returns {promise} - promise which resolves with data
    **/
   getHeatmap(slide, name) {
-    var suffix = "Heatmap/get"
+    var suffix = "Heatmap/find"
     var url = this.base + suffix;
     var query = {};
     query.slide = slide;
@@ -319,26 +319,8 @@ class Store {
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
       mode: "cors"
-    }).then(this.errorHandler).then(x=>this.filterBroken(x, "heatmap"))
+    }).then(this.errorHandler).then(x => this.filterBroken(x, "heatmap"))
   }
-  /**
-   * update Heatmap fields - threshold
-   * @param {string} id - the heatmap id
-   * @returns {promise} - promise which resolves with data
-   **/
-  // updateHeatmapThreshold(caseId, execId) {
-  //   var suffix = "Heatmap/get"
-  //   var url = this.base + suffix;
-  //   var query = {};
-  //   query.case = caseId;
-  //   query.subject = caseId;
-  //   query.exec = execId;
-
-  //   return fetch(url + "?" + objToParamStr(query), {
-  //     credentials: "include",
-  //     mode: "cors"
-  //   }).then(this.errorHandler).then(x=>this.filterBroken(x, "heatmap"))
-  // }
 
 
   /**
@@ -349,7 +331,7 @@ class Store {
   addHeatmap(json) {
     var suffix = "Heatmap/post"
     var url = this.base + suffix;
-    if (this.validation.heatmap && !this.validation.heatmap(json)){
+    if (this.validation.heatmap && !this.validation.heatmap(json)) {
       console.warn(this.validation.heatmap.errors)
     }
     return fetch(url, {
@@ -373,7 +355,7 @@ class Store {
     var suffix = "Heatmap/delete"
     var url = this.base + suffix;
     var query = {
-      id: id,
+      _id: id,
       slide: slide
     }
     return fetch(url + "?" + objToParamStr(query), {
@@ -384,7 +366,7 @@ class Store {
   }
 
 
-  updateHeatmapFields(slide, name, fields, setting){
+  updateHeatmapFields(slide, name, fields, setting) {
     var suffix = "Heatmap/threshold"
     var url = this.base + suffix;
     var query = {}
@@ -394,18 +376,23 @@ class Store {
       query.slide = slide
     }
 
-    if(name) {
+    if (name) {
       query.name = name
     }
 
-    if(fields) {
+    if (fields) {
       query.fields = fields
     }
-    if(setting) {
+    if (setting) {
       query.setting = setting
+    }
+    data = {
+      'provenance.analysis.fields': fields,
+      'provenance.analysis.setting': setting
     }
     return fetch(url + "?" + objToParamStr(query), {
       method: "DELETE",
+      body: JSON.stringify(data),
       credentials: "include",
       mode: "cors"
     }).then(this.errorHandler)
@@ -436,7 +423,7 @@ class Store {
     }).then(this.errorHandler)
   }
 
-  updateHeatmapEdit(user, slide, name, data){
+  updateHeatmapEdit(user, slide, name, data) {
     var suffix = "HeatmapEdit/update"
     var url = this.base + suffix;
     var query = {}
@@ -449,15 +436,15 @@ class Store {
       query.slide = slide
     }
 
-    if(name) {
+    if (name) {
       query.name = name
-    }
-    if(data) {
-      query.data = data
     }
 
     return fetch(url + "?" + objToParamStr(query), {
       method: "DELETE",
+      body: JSON.stringify({
+        data: data
+      }),
       credentials: "include",
       mode: "cors"
     }).then(this.errorHandler)
@@ -473,7 +460,7 @@ class Store {
     if (slide) {
       query.slide = slide
     }
-    if(name) {
+    if (name) {
       query.name = name
     }
     return fetch(url + "?" + objToParamStr(query), {
@@ -498,7 +485,7 @@ class Store {
       query.slide = slide
     }
 
-    if(name) {
+    if (name) {
       query.name = name
     }
     return fetch(url + "?" + objToParamStr(query), {
@@ -509,50 +496,8 @@ class Store {
   }
 
 
-
   /**
-   * find overlays matching name and/or type
-   * @param {string} [name] - the overlay, supporting regex match
-   * @param {string} [slide] - the associated slide id
-   * @returns {promise} - promise which resolves with data
-   **/
-  findOverlay(name, slide) {
-    var suffix = "Overlay/find"
-    var url = this.base + suffix;
-    var query = {}
-    if (name) {
-      query.name = name
-    }
-    if (slide) {
-      query.slide = slide
-    }
-
-    return fetch(url + "?" + objToParamStr(query), {
-      credentials: "include",
-      mode: "cors"
-    }).then(this.errorHandler)
-  }
-
-  /**
-   * get overlay by id
-   * @param {string} id - the overlay id
-   * @returns {promise} - promise which resolves with data
-   **/
-  getOverlay(id) {
-    var suffix = "Overlay/get"
-    var url = this.base + suffix;
-    var query = {
-      'id': id
-    }
-
-    return fetch(url + "?" + objToParamStr(query), {
-      credentials: "include",
-      mode: "cors"
-    }).then(this.errorHandler)
-  }
-
-  /**
-   * find overlays matching name and/or type
+   * find slide
    * @param {string} [name] - the slide name
    * @param {string} [location] - the slide location, supporting regex match
    * @returns {promise} - promise which resolves with data
@@ -586,16 +531,16 @@ class Store {
    * @returns {promise} - promise which resolves with data
    **/
   getSlide(id) {
-    var suffix = "Slide/get"
+    var suffix = "Slide/find"
     var url = this.base + suffix;
     var query = {
-      'id': id
+      '_id': id
     }
 
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
       mode: "cors"
-    }).then(this.errorHandler).then(x=>this.filterBroken(x, "slide"))
+    }).then(this.errorHandler).then(x => this.filterBroken(x, "slide"))
   }
 
   /**
@@ -618,7 +563,7 @@ class Store {
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
       mode: "cors"
-    }).then(this.errorHandler).then(x=>this.filterBroken(x, "template"))
+    }).then(this.errorHandler).then(x => this.filterBroken(x, "template"))
   }
 
   /**
@@ -627,16 +572,16 @@ class Store {
    * @returns {promise} - promise which resolves with data
    **/
   getTemplate(id) {
-    var suffix = "Template/get"
+    var suffix = "Template/find"
     var url = this.base + suffix;
     var query = {
-      'id': id
+      '_id': id
     }
 
     return fetch(url + "?" + objToParamStr(query), {
       credentials: "include",
       mode: "cors"
-    }).then(this.errorHandler).then(x=>this.filterBroken(x, "template"))
+    }).then(this.errorHandler).then(x => this.filterBroken(x, "template"))
   }
 
   /**
@@ -644,28 +589,28 @@ class Store {
    ** @param {object} json - the log data
    * @returns {promise} - promise which resolves with data
    **/
-   addLog(json){
-     var suffix = "Log/post"
-     var url = this.base + suffix;
-     return fetch(url, {
-       method: "POST",
-       credentials: "include",
-       mode: "cors",
-       headers: {
-         "Content-Type": "application/json; charset=utf-8",
-         // "Content-Type": "application/x-www-form-urlencoded",
-       },
-       body: JSON.stringify(json)
-     }).then(this.errorHandler)
-   }
+  addLog(json) {
+    var suffix = "Log/post"
+    var url = this.base + suffix;
+    return fetch(url, {
+      method: "POST",
+      credentials: "include",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        // "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: JSON.stringify(json)
+    }).then(this.errorHandler)
+  }
 
   /**
-   * add a log item
+   * get config
    ** @param {object} json - the log data
    * @returns {promise} - promise which resolves with data
    **/
-  getConfigByName(name){
-    var suffix = "Configuration/getConfigByName"
+  getConfigByName(name) {
+    var suffix = "Configuration/find"
     var url = this.base + suffix;
     var query = {
       'name': name
@@ -695,42 +640,6 @@ class Store {
       headers: {
         "Content-Type": "application/json; charset=utf-8"
       }
-    }).then(this.errorHandler)
-  }
-
-  /**
-   * update data
-   * @param {string} type - the datatype to get
-   * @param {object} query - the query of url parameters
-   * @param {object} data - the data to update
-   * @returns {promise} - promise which resolves with data
-   **/
-  update(type, query, data) {
-    var url = this.base + type + "/update";
-
-    return fetch(url + "?" + objToParamStr(query), {
-      method: "UPDATE",
-      mode: "cors",
-      body: JSON.stringify(data),
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8"
-      }
-    }).then(this.errorHandler)
-  }
-
-  /**
-   * delete data
-   * @param {string} type - the datatype to get
-   * @param {object} query - the query of url parameters
-   * @returns {promise} - promise which resolves with data
-   **/
-  delete(type, query) {
-    var url = this.base + type + "/delete";
-
-    return fetch(url + "?" + objToParamStr(query), {
-      credentials: "include",
-      mode: "cors"
     }).then(this.errorHandler)
   }
 }
