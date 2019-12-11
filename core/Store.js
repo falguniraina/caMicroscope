@@ -203,7 +203,7 @@ class Store {
     var url = this.base + suffix;
     var query = {
       _id: id,
-      slide: slide
+      "provenance.image.slide": slide
     }
     return fetch(url + "?" + objToParamStr(query), {
       method: "DELETE",
