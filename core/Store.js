@@ -582,13 +582,12 @@ class Store {
    * post data
    * @param {string} type - the datatype to post
    * @param {object} data - the data to post
-   * @param {object} [query] - the query of url parameters
    * @returns {promise} - promise which resolves with data
    **/
-  post(type, query, data) {
-    var url = this.base + type + "/post";
+  post(type, data) {
+    var postUrl = this.base + type + "/post";
 
-    return fetch(url + "?" + objToParamStr(query), {
+    return fetch(postUrl, {
       method: "POST",
       mode: "cors",
       body: JSON.stringify(data),

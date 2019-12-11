@@ -1,6 +1,6 @@
-var upload_url = "../../load/Slide/upload"
-var check_url = "../../load/Slide/info/"
-var thumb_url = "../../load/Slide/thumb/"
+var upload_url = "../../loader/upload/start/"
+var check_url = "../../loader/data/one/"
+var thumb_url = "../../loader/data/thumbnail/"
 
 var store = new Store("../../data/")
 
@@ -9,7 +9,7 @@ function changeStatus(step, text, reset=true){
   //Reset the status bar
   console.log("Previous: ", document.getElementById("load_status").innerHTML)
   document.getElementById("load_status").innerHTML=""
-  
+
   //Display JSON as table:
   if(typeof text === 'object'){ //If the text arg is a JSON
 
@@ -45,7 +45,7 @@ function changeStatus(step, text, reset=true){
       for(var j = 0; j < col.length; j++) {
         var tabCell = tr.cells[tr.cells.length-1]
         tabCell.innerHTML = Number(Number(tabCell.innerHTML) + 1)
-      }        
+      }
     }
     else{
       //Add JSON data to the table as rows:
@@ -54,7 +54,7 @@ function changeStatus(step, text, reset=true){
         var tabCell = tr.insertCell(-1)
         tabCell.innerHTML = text[col[j]]
       }
-      if(step == "CHECK"){ 
+      if(step == "CHECK"){
         //During check, thumbnail needs to be fetched & added to the table
         // In this case, text[col[col.length - 1]] is the filename
         fetch(thumb_url + text[col[col.length - 1]], {credentials: "same-origin"}).then(
@@ -116,7 +116,7 @@ function handleCheck(filename, reset, id){
   );
 }
 
-function handlePost(filename, slidename, reset){  
+function handlePost(filename, slidename, reset){
   fetch(check_url + filename, {credentials: "same-origin"}).then(
     response => response.json() // if the response is a JSON object
   ).then(
@@ -129,7 +129,7 @@ function handlePost(filename, slidename, reset){
       data.mpp = parseFloat(data['mpp-x']) || parseFloat(data['mpp-y']) || 0
       data.mpp_x = parseFloat(data['mpp-x'])
       data.mpp_y = parseFloat(data['mpp-y'])
-      store.post("Slide", {}, data).then(
+      store.post("Slide", data).then(
         success => changeStatus("POST", success, reset) // Handle the success response object
       ).catch(
         error => changeStatus("POST", error, reset) // Handle the error response object
@@ -138,13 +138,6 @@ function handlePost(filename, slidename, reset){
   ).catch(
     error => changeStatus("POST", error, reset) // Handle the error response object
   );
-}
-
-//register events for file upload
-function UploadBtn(){
-  const fileInput = document.getElementById('fileinput');
-  var filename = document.getElementById('filename').value
-  handleUpload(fileInput.files[0], filename);
 }
 
 function CheckBtn(){

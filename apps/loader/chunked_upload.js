@@ -1,8 +1,8 @@
 // expects changeStatus to be defined from loader.js
 
-var start_url = '../../load/Upload/start'
-var continue_url = '../../load/Upload/continue/'
-var finish_url = '../../load/Upload/finish/'
+var start_url = '../../loader/upload/start'
+var continue_url = '../../loader/upload/continue/'
+var finish_url = '../../loader/upload/finish/'
 var chunkSize = 5*1024*1024;
 
 // read a chunk of the file
@@ -45,7 +45,7 @@ async function readFileChunks(file, token){
 }
 
 
-async function handle_upload(selectedFiles){  
+async function handle_upload(selectedFiles){
   var fnametr = document.getElementById("filenameRow")
   var tokentr = document.getElementById("tokenRow")
   var slidetr = document.getElementById("slidenameRow")
@@ -58,7 +58,7 @@ async function handle_upload(selectedFiles){
     fnametr.deleteCell(1)
     tokentr.deleteCell(1)
     slidetr.deleteCell(1)
-    idtr.deleteCell(1)    
+    idtr.deleteCell(1)
   }
 
   var currID = 0;
@@ -119,12 +119,12 @@ function finish_upload(){
             }})
       console.log(i)
       reg_req.then(x=>x.json()).then(a=>{changeStatus("UPLOAD | Finished", a, reset); console.log(a); reset = false })
-      reg_req.then(e=> { 
+      reg_req.then(e=> {
         if(e["ok"]===false){
-          changeStatus("UPLOAD | ERROR;", e); 
+          changeStatus("UPLOAD | ERROR;", e);
           reset = true;
-          console.log(e); 
+          console.log(e);
         }
-      })      
+      })
   }
 }
