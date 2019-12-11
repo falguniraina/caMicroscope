@@ -343,8 +343,8 @@ class Store {
       query["provenance.analysis.execution_id"] = name
     }
     var data = {
-      'provenance.analysis.fields': fields,
-      'provenance.analysis.setting': setting
+      'provenance.analysis.fields': JSON.parse(fields),
+      'provenance.analysis.setting': JSON.parse(setting)
     }
     return fetch(url + "?" + objToParamStr(query), {
       method: "DELETE",
@@ -399,7 +399,7 @@ class Store {
     return fetch(url + "?" + objToParamStr(query), {
       method: "DELETE",
       body: JSON.stringify({
-        data: data
+        data: JSON.parse(data)
       }),
       credentials: "include",
       mode: "cors"
